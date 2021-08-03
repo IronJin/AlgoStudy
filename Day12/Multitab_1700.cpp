@@ -25,6 +25,11 @@ int find()	//	뽑아야할 전기용품의 번호 반환
 	{
 		if(check(i))
 		{
+			if(pq[i].empty())
+			{
+				return i;
+			}
+
 			if(!pq[i].empty() && pq[i].top() > max)
 			{
 				max = pq[i].top();
