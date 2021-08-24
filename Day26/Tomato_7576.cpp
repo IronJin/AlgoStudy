@@ -15,8 +15,8 @@ int M, N;
 int t_cnt = 0, days = 0;
 int box[MAX][MAX];
 
-int x_move[4] = {0, 1, 0, -1};
-int y_move[4] = {-1, 0, 1, 0};
+int x_move[4] = {1, 0, -1, 0};
+int y_move[4] = {0, 1, 0, -1};
 
 queue<Tomato> q;
 
@@ -24,27 +24,27 @@ bool inTheScope(int x, int y)
 {
 	return (x >= 0 && x < M && y >= 0 && y < N);
 }
- 
+
 void BFS()
 {
 	while(!q.empty())
 	{
 		Tomato curT = q.front();
 		q.pop();
-		t_cnt--;
-
-		cout << "Tomato count : " << t_cnt << endl;
+		
 		for(int i = 0; i < 4; i++)
 		{
 			int n_x = curT.x + x_move[i];
 			int n_y = curT.y + y_move[i];
 
-			if(inTheScope(n_x, n_y) && box[n_x][n_y] == 0)
+			if(inTheScope(n_x, n_y) && box[n_y][n_x] == 0)
 			{
 				q.push(Tomato(n_x, n_y));
-				box[n_x][n_y] = box[curT.x][curT.y] + 1;
+				box[n_y][n_x] = box[curT.y][curT.x] + 1;
 
-				if(days < box[n_x][n_y]) days = box[n_x][n_y];
+                t_cnt--;
+
+				if(days < box[n_y][n_x]) days = box[n_y][n_x];
 			}
 		}
 	}
@@ -60,8 +60,8 @@ int main()
 		{
 			cin >> box[i][j];
 			
-			if(box[i][j] >= 0) t_cnt++;
-			if(box[i][j])
+			if(box[i][j] == 0) t_cnt++;
+			if(box[i][j] == 1)
 				q.push(Tomato(j, i));
 
 		}
@@ -70,13 +70,12 @@ int main()
 
 	BFS();
 
-	cout << t_cnt << endl;
+	if(days) days--;
+
 	if(t_cnt) cout << "-1";
 	else cout << days;
+	
 
 	return 0;
 }
 
-	
-
-	
