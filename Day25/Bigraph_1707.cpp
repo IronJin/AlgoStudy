@@ -1,75 +1,71 @@
 #include <iostream>
+#include <vector>
 #define MAX_V 20001
-#define MAX_E 200001
-
-bool vertex[MAX_V][MAX_E];
-int visit[MAX_V];
 
 using namespace std;
 
-int K, V, E, input1, input2;
-int group = 0;
-bool ps = false;
+vector<int> vertex[MAX_V];
+int visit[MAX_V];
 
-void DFS(int a)
+void DFS(int a, int c)
 {
-	visit[a] = ++group;
-	cout << "a : " << a << " group : " << group << endl;
-	group %= 2;
+	visit[a] = c;
 
-	for(int i = 1; i <= V; i++)
+	for(int i = 0; i < vertex[a].size(); i++)
 	{
-		if(visit[i] == 0 && vertex[a][i])
-			DFS(i);
-
-		else if(a != 1 && visit[i] > 0)
-		{
-			if((group + 1) != visit[i])
-			{
-				ps = true;
-				cout << "i : " << i << endl;
-			}
-		}
-
-		if(ps) break;
+		if(visit[vertex[a][i]] == 0)
+			DFS(vertex[a][i], 3 - c);
 	}
-}
-
-void init()
-{
-	for(int i = 0; i < MAX_V; i++)
-	{
-		visit[i] = false;
-	}
-}
-				
+}		
 	
 int main()
 {
+    int K;
+
 	cin >> K;
 
 	while(K--)
 	{
+        int V, E;
 		cin >> V >> E;
-
+        
+        for(int i=1; i <= V; i++){
+            vertex[i].clear();
+            visit[i]=0;
+        }
+        
 		while(E--)
 		{
+            int input1, input2;
 			cin >> input1 >> input2;
 
-			vertex[input1][input2] = vertex[input2][input1] = true;
+			vertex[input1].push_back(input2);
+            vertex[input2].push_back(input1);
 		}
 	
-		DFS(1);
-
+	    
+        for(int i = 1; i <= V; i++)
+        {
+            if(visit[i]==0)
+            {
+                DFS(i, 1);
+            }
+        }
+        
+        bool ps = false;
+        for(int i=1; i <= V; i++){
+            for(int j = 0; j < vertex[i].size(); j++){
+                int k = vertex[i][j];
+                if(visit[i] == visit[k])
+                    ps = true;
+            }
+        }
+        
 		if(ps) cout << "NO" << endl;
 		else cout << "YES" << endl;
 
-		init();
 	}
 
 	return 0;
 }
-
-			
-
 
